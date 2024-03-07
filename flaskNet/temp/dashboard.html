@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block head %} 
+<title>Sensor Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 800px; /* Adjust the maximum width as needed */
+            margin: auto; /* Center the charts horizontally */
+        }
+        .chart-item {
+            width: 48%; /* Adjust width for two charts to fit side by side */
+            margin-bottom: 40px; /* Add space between charts */
+        }
+    </style>
+{% endblock %} 
+
+{% block content %}
+<div class="chart-container">
+    {% for i in range(sensor_data | length) %}
+    <div class="chart-item">
+        <canvas id="{{ sensor_names[i] }}Chart" width="400" height="200"></canvas>
+        <script>
+            var labels = Array.from({ length: 100 }, (_, i) => (i + 1).toString());
+            var sensorData{{ i }} = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '{{ sensor_names[i] }}',
+                        data: [{{ sensor_data[i] | join(',') }}],
+                        borderColor: getColor({{ i }}),
+                        fill: true
+                    }
+                ]
+            };
+
+            const config{{ i }} = {
+                type: 'line',
+                data: sensorData{{ i }},
+                options: {
+                    responsive : false
+                }
+            };
+
+            var sensorCtx{{ i }} = document.getElementById('{{ sensor_names[i] }}Chart').getContext('2d');
+            var sensorChart{{ i }} = new Chart(sensorCtx{{ i }}, config{{ i }});
+
+            function getColor(index) {
+                var colors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow', 'cyan'];
+                return colors[index % colors.length];
+            }
+        </script>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block head %} 
+<title>Control Panel</title>
+<style>
+    /* Custom toggle switch styles */
+    input[type="checkbox"] {
+        opacity: 0;
+        position: absolute;
+        left: -90000;
+        top: -90000;
+    }
+
+    input[type="checkbox"].toggle + label {
+        position: relative;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+    }
+
+    input[type="checkbox"].toggle + label::before {
+        content: "";
+        width: 3em;
+        height: 1.5em;
+        background-color: #fcd0d0;
+        border-radius: 1em;
+        margin-right: 1em;
+        transition: 100ms ease-in-out;
+    }
+
+    input[type="checkbox"].toggle + label::after {
+        position: absolute;
+        content: "";
+        left: .1em;
+        width: 1.4em;
+        height: 1.4em;
+        background-color: #f89090;
+        border-radius: 1em;
+        transition: 100ms ease-in-out;
+    }
+
+    input[type="checkbox"].toggle:checked + label::before {
+        background-color: #c8fdd0;
+    }
+
+    input[type="checkbox"].toggle:checked + label::after {
+        transform: translateX(100%);
+        background-color: #8bfba7;
+    }
+    label{
+        color: white;
+        align-items: center;
+    }
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 style="color: aliceblue;">GPIO Controls</h1>
+<br>
+{% for gpio, value in gpio_state.items() %}
+<div class="toggle-container">
+    <!-- <span class="toggle-label", style="color: white;">{{ gpio }}</span> -->
+    <input type="checkbox" id="{{ gpio }}" class="toggle toggle-checkbox" {% if value == 1 %}checked{% endif %} {% if gpio == 'gpio1' %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %} onchange="toggleGPIO('{{ gpio }}')">
+    <label for="{{ gpio }}" {% if gpio == 'gpio1' %}style="color: red;"{% endif %}>{{ gpio }}</label>
+    <br>
+</div>
+{% endfor %}
+
+
+
+<script>
+    function toggleGPIO(gpioId) {
+        const checkbox = document.getElementById(gpioId);
+        fetch('/toggle_gpio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: gpioId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('GPIO toggled successfully');
+                // No need to toggle checkbox state here
+            } else {
+                console.error('Failed to toggle GPIO');
+            }
+        })
+        .catch(error => {
+            console.error('Error toggling GPIO:', error);
+        });
+    }
+</script>
+
+{% endblock %}
