@@ -1,7 +1,7 @@
 import ThingESP
 import machine
 import err_log
-thing = ThingESP.Client('EiadurRahman', 'esp8266whatsapp', 'esp8266')
+thing = ThingESP.Client('', '', '')
 from time import sleep
 import whatsapp_handle
 
