@@ -21,7 +21,7 @@ sta = network.WLAN(network.STA_IF)
 
 def do_connect():
     import network
-    ssid = 'vivo'
+    ssid = 'ssid'
     pas = '123456789'
 
     sta = network.WLAN(network.STA_IF)
