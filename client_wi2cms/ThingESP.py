@@ -74,8 +74,8 @@ class Client:
     def send_msg(self,msg):
         d4.on()
         # Your Twilio Account SID and Auth Token
-        account_sid = 'ACa455fc20085ff838298f1cd35862b12d'
-        auth_token = '7d04dc78d397c1eb314df63b0b9259a4'
+        account_sid = ''
+        auth_token = ''
 
         # Set up the Twilio API URL for sending WhatsApp messages
         twilio_url = 'https://api.twilio.com/2010-04-01/Accounts/{}/Messages.json'.format(account_sid)
@@ -87,8 +87,8 @@ class Client:
 
         # Set up the request payload (message details)
         payload = {
-            'To': 'whatsapp%3A%2B8801983289374',  # Replace with the recipient's Bangladeshi WhatsApp number
-            'From': 'whatsapp%3A%2B14155238886',  # Replace with your Twilio WhatsApp number
+            'To': 'whatsapp%3A%',  # Replace with the recipient's Bangladeshi WhatsApp number
+            'From': 'whatsapp%3A%',  # Replace with your Twilio WhatsApp number
             'Body': msg,  # Message content
         }
 
