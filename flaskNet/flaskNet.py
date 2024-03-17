@@ -33,6 +33,7 @@ def dashboard():
     sensor_names = ['solar', 'temp', 'humidity', 'soil moisture']
     # Pass data and sensor names to the template
     return render_template('dashboard.html', sensor_data=sensor_data, sensor_names=sensor_names)
+    
 
 
 # Route to serve the controls page with toggle switches
@@ -59,6 +60,7 @@ def receive_data():
         writer.writerow(sensor_data)
     
     return gpios.get_data()
+    
 
 @app.route('/gpio_data', methods=['POST'])
 def receive_gpio_data():
@@ -67,6 +69,12 @@ def receive_gpio_data():
     # Here you can handle the received GPIO data as needed
     gpios.update_gpio_state(data)
     return jsonify(success=True)
+
+@app.route('/get_gpio_state', methods=['GET'])
+def get_gpio_state():
+    data = gpios.get_data()
+    print(type(data),"\n",data)
+    return data
 
 # Route to handle AJAX requests for toggling GPIO values
 @app.route('/toggle_gpio', methods=['POST'])
