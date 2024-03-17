@@ -70,6 +70,25 @@
 
 
 <script>
+    // Function to fetch GPIO state from the backend and update UI
+    function updateGPIOState() {
+        fetch('/get_gpio_state') // Endpoint to fetch GPIO state from the backend
+        .then(response => response.json())
+        .then(data => {
+            // Update UI based on fetched GPIO state
+            for (const gpio in data) {
+                const checkbox = document.getElementById(gpio);
+                if (checkbox) {
+                    checkbox.checked = (data[gpio] == 1);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error updating GPIO state:', error);
+        });
+    }
+
+    // Function to toggle GPIO
     function toggleGPIO(gpioId) {
         const checkbox = document.getElementById(gpioId);
         fetch('/toggle_gpio', {
@@ -92,6 +111,10 @@
             console.error('Error toggling GPIO:', error);
         });
     }
+
+    // Update GPIO state initially and then every second
+    updateGPIOState(); // Update initially
+    setInterval(updateGPIOState, 2000); // Update every second
 </script>
 
 {% endblock %}
